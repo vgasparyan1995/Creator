@@ -1,31 +1,36 @@
+const {lowerCaseFirst, upperCaseFisrt} = require('./../helper');
+
 function getDataForSelector(type) {
-    return `class ${type}Selector {
+    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `class ${typeFirstUpperCase}Selector {
 
     _getReducer(state) {
-        return state.${type.toLowerCase()}Reducer;
+        return state.${typeFirstLowerCase}Reducer;
     }
     
     getData(state) {
-        return this._getReducer(state).${type.toLowerCase()}s;
+        return this._getReducer(state).${typeFirstLowerCase}s;
     }
     
     getDataLoading(state) {
-        return this._getReducer(state).${type.toLowerCase()}sLoading;
+        return this._getReducer(state).get${typeFirstLowerCase}sLoading;
     }
     
     addDataLoading(state) {
-        return this._getReducer(state).add${type}Loading;
+        return this._getReducer(state).add${typeFirstUpperCase}Loading;
     }
     
     editDataLoading(state) {
-        return this._getReducer(state).edit${type}Loading;
+        return this._getReducer(state).edit${typeFirstUpperCase}Loading;
     }
 
     deleteDataLoading(state) {
-        return this._getReducer(state).delete${type}Loading;
+        return this._getReducer(state).delete${typeFirstUpperCase}Loading;
     }    
 }
-export default new ${type}Selector();
+export default new ${typeFirstUpperCase}Selector();
 `
 }
 

@@ -1,60 +1,67 @@
+const {lowerCaseFirst, upperCaseFisrt} = require('./../helper');
+
 function getDataForReducer(type) {
-    return `import ${type}ActionType from "../actions/${type}/${type}ActionType";
+    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `import ${typeFirstUpperCase}ActionType from "../actions/${typeFirstLowerCase}/${typeFirstLowerCase}ActionType";
 
     const initialState = {
-        ${type.toLowerCase()}s: null,
-        get${type}sLoading: false,
-        add${type}Loading: false,
-        edit${type}Loading: false,
-        delete${type}Loading: false,
+        ${typeFirstLowerCase}s: null,
+        get${typeFirstUpperCase}sLoading: false,
+        add${typeFirstUpperCase}Loading: false,
+        edit${typeFirstUpperCase}Loading: false,
+        delete${typeFirstUpperCase}Loading: false,
     };
     
-    const ${type}Reducer = (state = initialState, action) => {
+    const ${typeFirstLowerCase}Reducer = (state = initialState, action) => {
         switch (action.type) {
-            case ${type}ActionType.SAVE_${type.toUpperCase()}S:
+            case ${typeFirstUpperCase}ActionType.SAVE_${type.toUpperCase()}S:
                 return {
                     ...state,
-                    ${type.toLowerCase()}s: action.payload.data
+                    ${typeFirstLowerCase}s: action.payload.data
                 };
-            case ${type}ActionType.GET_${type.toUpperCase()}S_LOADING:
+            case ${typeFirstUpperCase}ActionType.GET_${type.toUpperCase()}S_LOADING:
                 return {
                     ...state,
-                    get${type}sLoading: action.payload.loading
+                    get${typeFirstUpperCase}sLoading: action.payload.loading
                 };
-            case ${type}ActionType.ADD_${type.toUpperCase()}_LOADING:
+            case ${typeFirstUpperCase}ActionType.ADD_${type.toUpperCase()}_LOADING:
                 return {
                     ...state,
-                    add${type}Loading: action.payload.loading
+                    add${typeFirstUpperCase}Loading: action.payload.loading
                 };
-            case ${type}ActionType.EDIT_${type.toUpperCase()}_LOADING:
+            case ${typeFirstUpperCase}ActionType.EDIT_${type.toUpperCase()}_LOADING:
                 return {
                     ...state,
-                    edit${type}Loading: action.payload.loading
+                    edit${typeFirstUpperCase}Loading: action.payload.loading
                 };
-            case ${type}ActionType.DELETE_${type.toUpperCase()}_LOADING:
+            case ${typeFirstUpperCase}ActionType.DELETE_${type.toUpperCase()}_LOADING:
                 return {
                     ...state,
-                    delete${type}Loading: action.payload.loading
+                    delete${typeFirstUpperCase}Loading: action.payload.loading
                 };
-            case ${type}ActionType.RESET_${type.toUpperCase()}S:
+            case ${typeFirstUpperCase}ActionType.RESET_${type.toUpperCase()}S:
                 return initialState;
             default:
                 return state;
         }
     };  
-export default ${type}Reducer;
+export default ${typeFirstLowerCase}Reducer;
 `
 }
 
 function getDataForCombineReducer(type) {
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
     return `import {combineReducers} from 'redux';
 
-import ${type}Reducer from './${type}Reducer';
-//tmp import
+import ${typeFirstLowerCase}Reducer from './${typeFirstLowerCase}Reducer';
+//.import
     
 const AppReducer = combineReducers({
-    ${type}Reducer,
-    //tmp reducer
+    ${typeFirstLowerCase}Reducer,
+    //.construct
 });
     
 const RootReducer = (state, action) => {

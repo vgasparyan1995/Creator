@@ -1,23 +1,30 @@
+const { lowerCaseFirst, upperCaseFisrt } = require('./../helper');
+
 function getDataForActionsRegistration(type) {
-    return `import ${type}ActionTypes from "../actions/${type}/${type}ActionType";
-import {${type}} from "../../services/ControllerManager";
+    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `import ${typeFirstUpperCase}ActionTypes from "./../actions/${typeFirstLowerCase}/${typeFirstLowerCase}ActionType";
+import {${typeFirstLowerCase}} from "./../../managers/controllerManager";
     
-export default function ${type}Registration(configs) {
-    configs.set(${type}ActionTypes.GET_${type.toUpperCase()}S, ${type}.get.bind(${type}));
-    configs.set(${type}ActionTypes.ADD_${type.toUpperCase()}, ${type}.add.bind(${type}));
-    configs.set(${type}ActionTypes.EDIT_${type.toUpperCase()}, ${type}.edit.bind(${type}));
-    configs.set(${type}ActionTypes.DELETE_${type.toUpperCase()}, ${type}.delete.bind(${type}));
+export default function ${typeFirstLowerCase}Registration(configs) {
+    configs.set(${typeFirstUpperCase}ActionTypes.GET_${type.toUpperCase()}S, ${typeFirstLowerCase}.get.bind(${typeFirstLowerCase}));
+    configs.set(${typeFirstUpperCase}ActionTypes.ADD_${type.toUpperCase()}, ${typeFirstLowerCase}.add.bind(${typeFirstLowerCase}));
+    configs.set(${typeFirstUpperCase}ActionTypes.EDIT_${type.toUpperCase()}, ${typeFirstLowerCase}.edit.bind(${typeFirstLowerCase}));
+    configs.set(${typeFirstUpperCase}ActionTypes.DELETE_${type.toUpperCase()}, ${typeFirstLowerCase}.delete.bind(${typeFirstLowerCase}));
 }
 `
 }
 
 function getIndexActionsRegistration(type) {
-    return `import ${type}Registration from "./${type}Registration";
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `import ${typeFirstLowerCase}Registration from "./${typeFirstLowerCase}Registration";
 //.import
 
 const configs = new Map();
 
-${type}Registration(configs);
+${typeFirstLowerCase}Registration(configs);
 //.construct
 
 export default configs;
