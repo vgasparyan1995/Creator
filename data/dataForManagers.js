@@ -1,13 +1,19 @@
+const { lowerCaseFirst, upperCaseFisrt } = require('./../helper');
+
 function getDataForControllerManager(type) {
-    return `import ServiceManager from './ServiceManager.js';
-import ${type} from '../controllers/${type}Controller.js';
+    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `import SelectorManager from './selectorManager.js';
+import SdkManager from './sdkManager.js';
+import ${typeFirstUpperCase}Controller from './../controllers/${typeFirstLowerCase}Controller';
 //.import
 
-const ${type} = new ${type}(ServiceManager.selector, ServiceManager.sdk);
+const ${typeFirstLowerCase} = new ${typeFirstUpperCase}Controller(SelectorManager.${typeFirstLowerCase}Selector, SdkManager.${typeFirstLowerCase}SDK);
 //.construct
 
 export {
-    ${type},
+    ${typeFirstLowerCase},
     //.export
 };
 
@@ -15,15 +21,31 @@ export {
 }
 
 function getDataForSdkManager(type) {
+    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
     return `import ServiceManager from './serviceManager';
-import ${type}SDK from './../api-sdk/${type}SDK';
+import ${typeFirstUpperCase}SDK from './../api-sdk/${typeFirstLowerCase}SDK';
 //.import
 
-const ${type}SDK = new ${type}SDK(ServiceManager.networkService, ServiceManager.appConstants);
+const ${typeFirstLowerCase}SDK = new ${typeFirstUpperCase}SDK(ServiceManager.networkService, ServiceManager.appConstants);
 //.construct
 
 export default {
-    ${type}SDK,
+    ${typeFirstLowerCase}SDK,
+    //.export
+}
+`
+}
+
+function getDataForSelectorManager(type) {
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `import ${typeFirstLowerCase}Selector from './../store/selectors/${typeFirstLowerCase}Selector';
+//.import
+
+export default {
+    ${typeFirstLowerCase}Selector,
     //.export
 }
 `
@@ -32,4 +54,5 @@ export default {
 module.exports = {
     getDataForControllerManager,
     getDataForSdkManager,
+    getDataForSelectorManager,
 }

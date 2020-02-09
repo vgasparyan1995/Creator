@@ -1,12 +1,17 @@
-function getDataForController(type) {
-    return `import {
-    get${type}sLoading,
-    add${type}Loading,
-    edit${type}Loading,
-    delete${type}Loading,
-} from './../store/actions/${type}/${type}ActionCreator';
+const { lowerCaseFirst, upperCaseFisrt } = require('./../helper');
 
-class ${type}Controller {
+function getDataForController(type) {
+    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `import {
+    get${typeFirstUpperCase}sLoading,
+    add${typeFirstUpperCase}Loading,
+    edit${typeFirstUpperCase}Loading,
+    delete${typeFirstUpperCase}Loading,
+} from './../store/actions/${typeFirstLowerCase}/${typeFirstLowerCase}ActionCreator';
+
+class ${typeFirstUpperCase}Controller {
 
     constructor(selector, sdk) {
         this._selector = selector;
@@ -15,47 +20,47 @@ class ${type}Controller {
 
     async get(store, action) {
         try {
-            store.dispatch(get${type}sLoading({payload: true}));
+            store.dispatch(get${typeFirstUpperCase}sLoading({payload: true}));
             
             const response = await this._sdk.get();            
         } finally {
-            store.dispatch(get${type}sLoading({payload: false}));
+            store.dispatch(get${typeFirstUpperCase}sLoading({payload: false}));
         }
     }
 
     async add(store, action) {
         try {
-            store.dispatch(add${type}Loading({payload: true}));
+            store.dispatch(add${typeFirstUpperCase}Loading({payload: true}));
             
             const response = await this._sdk.add();
         } finally {
-            store.dispatch(add${type}Loading({payload: false}));
+            store.dispatch(add${typeFirstUpperCase}Loading({payload: false}));
         }
     }
 
     async edit(store, action) {
         try {
-            store.dispatch(edit${type}Loading({payload: true}));
+            store.dispatch(edit${typeFirstUpperCase}Loading({payload: true}));
             
             const response = await this._sdk.edit(id, data);
         } finally {
-            store.dispatch(edit${type}Loading({payload: false}));
+            store.dispatch(edit${typeFirstUpperCase}Loading({payload: false}));
         }
     }
 
     async delete(store, action) {
         try {
-            store.dispatch(delete${type}Loading({payload: true}));
+            store.dispatch(delete${typeFirstUpperCase}Loading({payload: true}));
             
             const response = await this._sdk.delete(id);
         } finally {
-            store.dispatch(delete${type}Loading({payload: false}));
+            store.dispatch(delete${typeFirstUpperCase}Loading({payload: false}));
         }
     }
 }
 
 
-export default ${type}Controller;
+export default ${typeFirstUpperCase}Controller;
 `
 }
 

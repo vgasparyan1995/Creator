@@ -8,7 +8,9 @@ const { getDataForActionInvokingMiddleware } = require('./data/dataForActionInvo
 const { getDataForStore } = require('./data/dataForStore');
 const { getDataForController } = require('./data/dataForController');
 const { getDataForSDK } = require('./data/dataForSDK.js');
-const { getDataForControllerManager, getDataForSdkManager } = require('./data/dataForManagers');
+const { getDataForControllerManager, getDataForSdkManager, getDataForSelectorManager } = require('./data/dataForManagers');
+const { getDataForNetworkService } = require('./data/dataForNetworkService');
+const { getDataForCacheService } = require('./data/dataForCacheService');
 
 let path = process.argv[3] || './';
 
@@ -109,14 +111,13 @@ if (!fs.existsSync(`${path}src/core/store/store.js`)) {
     fs.writeFileSync(`${path}src/core/store/store.js`, getDataForStore());
 }
 
-// TODO: Stexic sharunakeli
 
 // Create Controllers
 if (!fs.existsSync(`${path}src/core/controllers`)) {
     fs.mkdirSync(`${path}src/core/controllers`)
 }
 for (let index in actions) {
-    fs.writeFileSync(`${path}src/core/controllers/${actions[index]}Controller.js`, getDataForController(actions[index]));
+    fs.writeFileSync(`${path}src/core/controllers/${lowerCaseFirst(actions[index])}Controller.js`, getDataForController(actions[index]));
 }
 
 // Create SDK
@@ -124,7 +125,7 @@ if (!fs.existsSync(`${path}src/core/api-sdk`)) {
     fs.mkdirSync(`${path}src/core/api-sdk`)
 }
 for (let index in actions) {
-    fs.writeFileSync(`${path}src/core/api-sdk/${actions[index]}SDK.js`, getDataForSDK(actions[index]));
+    fs.writeFileSync(`${path}src/core/api-sdk/${lowerCaseFirst(actions[index])}SDK.js`, getDataForSDK(actions[index]));
 }
 
 // Create Managers
@@ -138,9 +139,9 @@ for (let index in actions) {
         fs.writeFileSync(`${path}src/core/managers/controllerManager.js`, getDataForControllerManager(actions[index]));
     } else {
         let contents = fs.readFileSync(`${path}src/core/managers/controllerManager.js`, 'utf8');
-        contents = contents.replace('//.import', `import ${actions[index]} from './${actions[index]}Controller';\n//.import`);
-        contents = contents.replace('//.construct', `const ${actions[index]} = new ${actions[index]}(ServiceManager.selector, ServiceManager.sdk);\n//.construct`);
-        contents = contents.replace('//.export', `${actions[index]},\n//.export`);
+        contents = contents.replace('//.import', `import ${upperCaseFisrt(actions[index])}Controller from './../controllers/${lowerCaseFirst(actions[index])}Controller';\n//.import`);
+        contents = contents.replace('//.construct', `const ${lowerCaseFirst(actions[index])} = new ${upperCaseFisrt(actions[index])}Controller(SelectorManager.${lowerCaseFirst(actions[index])}Selector, SdkManager.${lowerCaseFirst(actions[index])}SDK);\n//.construct`);
+        contents = contents.replace('//.export', `${lowerCaseFirst(actions[index])},\n//.export`);
         fs.writeFileSync(`${path}src/core/managers/controllerManager.js`, contents);
     }
 }
@@ -151,9 +152,43 @@ for (let index in actions) {
         fs.writeFileSync(`${path}src/core/managers/sdkManager.js`, getDataForSdkManager(actions[index]));
     } else {
         let contents = fs.readFileSync(`${path}src/core/managers/sdkManager.js`, 'utf8');
-        contents = contents.replace('//.import', `import ${actions[index]} from './../api-sdk/${actions[index]}SDK';\n//.import`);
-        contents = contents.replace('//.construct', `const ${actions[index]}SDK = new ${actions[index]}SDK(ServiceManager.networkService, ServiceManager.appConstants);\n//.construct`);
-        contents = contents.replace('//.export', `${actions[index]}SDK,\n//.export`);
+        contents = contents.replace('//.import', `import ${upperCaseFisrt(actions[index])}SDK from './../api-sdk/${lowerCaseFirst(actions[index])}SDK';\n//.import`);
+        contents = contents.replace('//.construct', `const ${lowerCaseFirst(actions[index])}SDK = new ${upperCaseFisrt(actions[index])}SDK(ServiceManager.networkService, ServiceManager.appConstants);\n//.construct`);
+        contents = contents.replace('//.export', `${lowerCaseFirst(actions[index])}SDK,\n//.export`);
         fs.writeFileSync(`${path}src/core/managers/sdkManager.js`, contents);
     }
+}
+
+// Selector manager
+for (let index in actions) {
+    if (!fs.existsSync(`${path}src/core/managers/selectorManager.js`)) {
+        fs.writeFileSync(`${path}src/core/managers/selectorManager.js`, getDataForSelectorManager(actions[index]));
+    } else {
+        let contents = fs.readFileSync(`${path}src/core/managers/selectorManager.js`, 'utf8');
+        contents = contents.replace('//.import', `import ${lowerCaseFirst(actions[index])}Selector from './../store/selectors/${lowerCaseFirst(actions[index])}Selector';\n//.import`);
+        contents = contents.replace('//.export', `${lowerCaseFirst(actions[index])}Selector,\n//.export`);
+        fs.writeFileSync(`${path}src/core/managers/selectorManager.js`, contents);
+    }
+}
+
+
+if (!fs.existsSync(`${path}src/core/services`)) {
+    fs.mkdirSync(`${path}src/core/services`)
+}
+
+if (!fs.existsSync(`${path}src/core/services/network`)) {
+    fs.mkdirSync(`${path}src/core/services/network`)
+}
+
+
+if (!fs.existsSync(`${path}src/core/services/network/networkService.js`)) {
+    fs.writeFileSync(`${path}src/core/services/network/networkService.js`, getDataForNetworkService());
+}
+
+if (!fs.existsSync(`${path}src/core/services/storage`)) {
+    fs.mkdirSync(`${path}src/core/services/storage`)
+}
+
+if (!fs.existsSync(`${path}src/core/services/storage/cacheService.js`)) {
+    fs.writeFileSync(`${path}src/core/services/storage/cacheService.js`, getDataForCacheService());
 }

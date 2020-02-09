@@ -6,70 +6,70 @@ function getDataForActionCreator(type) {
 
     return `import ${typeFirstUpperCase}ActionType from "./${typeFirstLowerCase}ActionType";
 
-function get${typeFirstUpperCase}s(payload) {
+export function get${typeFirstUpperCase}s(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.GET_${type.toUpperCase()}S,
         payload
     }
 }
 
-function get${typeFirstUpperCase}sLoading(payload) {
+export function get${typeFirstUpperCase}sLoading(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.GET_${type.toUpperCase()}S_LOADING,
         payload
     } 
 }
 
-function add${typeFirstUpperCase}(payload) {
+export function add${typeFirstUpperCase}(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.ADD_${type.toUpperCase()},
         payload
     }
 }
 
-function add${typeFirstUpperCase}Loading(payload) {
+export function add${typeFirstUpperCase}Loading(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.ADD_${type.toUpperCase()}_LOADING,
         payload
     }
 }
 
-function edit${typeFirstUpperCase}(payload) {
+export function edit${typeFirstUpperCase}(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.EDIT_${type.toUpperCase()},
         payload
     }
 }
 
-function edit${typeFirstUpperCase}Loading(payload) {
+export function edit${typeFirstUpperCase}Loading(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.EDIT_${type.toUpperCase()}_LOADING,
         payload
     }
 }
 
-function delete${typeFirstUpperCase}(payload) {
+export function delete${typeFirstUpperCase}(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.DELETE_${type.toUpperCase()},
         payload
     }
 }
 
-function delete${typeFirstUpperCase}Loading(payload) {
+export function delete${typeFirstUpperCase}Loading(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.DELETE_${type.toUpperCase()}_LOADING,
         payload
     }
 }
 
-function save${typeFirstUpperCase}s(payload) {
+export function save${typeFirstUpperCase}s(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.SAVE_${type.toUpperCase()}S,
         payload
     }
 }
 
-function reset${typeFirstUpperCase}s(payload) {
+export function reset${typeFirstUpperCase}s(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.RESET_${type.toUpperCase()}S,
         payload

@@ -1,5 +1,9 @@
+const { upperCaseFisrt } = require('./../helper');
+
 function getDataForSDK(type) {
-    return `class ${type}SDK {
+    const typeFirstUpperCase = upperCaseFisrt(type);
+
+    return `class ${typeFirstUpperCase}SDK {
     constructor(network_service, app_constants) {
         this._network_service = network_service;
         this._app_constants = app_constants;
@@ -35,7 +39,7 @@ function getDataForSDK(type) {
 
 }
 
-export default ${type}SDK;
+export default ${typeFirstUpperCase}SDK;
 `
 }
 
