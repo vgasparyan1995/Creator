@@ -1,10 +1,10 @@
 function getDataForNetworkService() {
-    return `import AppConstants from '../../settings/constants.js';
+    return `import AppConstants from './../../settings/constants.js';
 
     class NetworkService {
     
-    constructor(validation_service, cache_service) {
-        this._validation_service = validation_service;
+    constructor(exception_handler_service, cache_service) {
+        this._exception_handler_service = exception_handler_service;
         this._cache_service = cache_service;
     }
 
@@ -119,7 +119,7 @@ function getDataForNetworkService() {
                     }
                     data.status = response.status;
 
-                    let check_result = await this._validation_service.validate(data);
+                    let check_result = await this._exception_handler_service.execute(data);
 
                     try {
                         if (!check_result || !check_result.error_code) {

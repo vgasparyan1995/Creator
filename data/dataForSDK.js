@@ -4,9 +4,8 @@ function getDataForSDK(type) {
     const typeFirstUpperCase = upperCaseFisrt(type);
 
     return `class ${typeFirstUpperCase}SDK {
-    constructor(network_service, app_constants) {
+    constructor(network_service) {
         this._network_service = network_service;
-        this._app_constants = app_constants;
     }
 
     get() {

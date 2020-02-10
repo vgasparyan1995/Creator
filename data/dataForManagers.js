@@ -28,7 +28,7 @@ function getDataForSdkManager(type) {
 import ${typeFirstUpperCase}SDK from './../api-sdk/${typeFirstLowerCase}SDK';
 //.import
 
-const ${typeFirstLowerCase}SDK = new ${typeFirstUpperCase}SDK(ServiceManager.networkService, ServiceManager.appConstants);
+const ${typeFirstLowerCase}SDK = new ${typeFirstUpperCase}SDK(ServiceManager.networkService);
 //.construct
 
 export default {
@@ -51,8 +51,35 @@ export default {
 `
 }
 
+function getDataForServiceManager() {
+    return `import cacheService from './../services/storage/cacheService';
+import NetworkService from './../services/network/networkService';
+import ExceptionHanglerService from './../services/exception/exceptionHandlerService';
+
+import InternalException from './../services/exception/types/internalException';
+import BadRequestException from './../services/exception/types/badRequestExcpetion';
+import TokenExpiredException from './../services/exception/types/tokenExpiredException';
+
+const internalException = new InternalException();
+const badRequestException = new BadRequestException();
+const tokenExpiredException = new TokenExpiredException();
+
+const exceptions = [internalException, badRequestException, tokenExpiredException];
+
+const exceptionHandlerService = new ExceptionHanglerService(exceptions);
+const networkService = new NetworkService(exceptionHandlerService, cacheService);
+
+export default {
+    cacheService,
+    networkService,
+    exceptionHandlerService,
+}
+`
+}
+
 module.exports = {
     getDataForControllerManager,
     getDataForSdkManager,
     getDataForSelectorManager,
+    getDataForServiceManager
 }

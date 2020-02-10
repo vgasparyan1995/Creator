@@ -8,10 +8,12 @@ const { getDataForActionInvokingMiddleware } = require('./data/dataForActionInvo
 const { getDataForStore } = require('./data/dataForStore');
 const { getDataForController } = require('./data/dataForController');
 const { getDataForSDK } = require('./data/dataForSDK.js');
-const { getDataForControllerManager, getDataForSdkManager, getDataForSelectorManager } = require('./data/dataForManagers');
+const { getDataForControllerManager, getDataForSdkManager, getDataForSelectorManager, getDataForServiceManager } = require('./data/dataForManagers');
 const { getDataForNetworkService } = require('./data/dataForNetworkService');
 const { getDataForCacheService } = require('./data/dataForCacheService');
-
+const { getDataForExceptionHandlerService } = require('./data/dataForExceptionHandlerSerivce');
+const { getBaseException, getBadRequestException, getTokenExpiredException, getInternalException } = require('./data/dataForExceptions');
+const { getDataForConstants } = require('./data/dataForConstants');
 let path = process.argv[3] || './';
 
 let options = JSON.parse(process.argv[2]);
@@ -128,6 +130,57 @@ for (let index in actions) {
     fs.writeFileSync(`${path}src/core/api-sdk/${lowerCaseFirst(actions[index])}SDK.js`, getDataForSDK(actions[index]));
 }
 
+// Create Services
+
+if (!fs.existsSync(`${path}src/core/services`)) {
+    fs.mkdirSync(`${path}src/core/services`)
+}
+
+if (!fs.existsSync(`${path}src/core/services/network`)) {
+    fs.mkdirSync(`${path}src/core/services/network`)
+}
+
+
+if (!fs.existsSync(`${path}src/core/services/network/networkService.js`)) {
+    fs.writeFileSync(`${path}src/core/services/network/networkService.js`, getDataForNetworkService());
+}
+
+if (!fs.existsSync(`${path}src/core/services/storage`)) {
+    fs.mkdirSync(`${path}src/core/services/storage`)
+}
+
+if (!fs.existsSync(`${path}src/core/services/storage/cacheService.js`)) {
+    fs.writeFileSync(`${path}src/core/services/storage/cacheService.js`, getDataForCacheService());
+}
+
+
+// Create Exception Service
+if (!fs.existsSync(`${path}src/core/services/exception`)) {
+    fs.mkdirSync(`${path}src/core/services/exception`)
+}
+if (!fs.existsSync(`${path}src/core/services/exception/exceptionHandlerService.js`)) {
+    fs.writeFileSync(`${path}src/core/services/exception/exceptionHandlerService.js`, getDataForExceptionHandlerService());
+}
+
+if (!fs.existsSync(`${path}src/core/services/exception/types`)) {
+    fs.mkdirSync(`${path}src/core/services/exception/types`)
+}
+if (!fs.existsSync(`${path}src/core/services/exception/types/baseException.js`)) {
+    fs.writeFileSync(`${path}src/core/services/exception/types/baseException.js`, getBaseException());
+}
+if (!fs.existsSync(`${path}src/core/services/exception/types/badRequestException.js`)) {
+    fs.writeFileSync(`${path}src/core/services/exception/types/badRequestException.js`, getBadRequestException());
+}
+if (!fs.existsSync(`${path}src/core/services/exception/types/tokenExpiredException.js`)) {
+    fs.writeFileSync(`${path}src/core/services/exception/types/tokenExpiredException.js`, getTokenExpiredException());
+}
+if (!fs.existsSync(`${path}src/core/services/exception/types/internalException.js`)) {
+    fs.writeFileSync(`${path}src/core/services/exception/types/internalException.js`, getInternalException());
+}
+
+
+
+
 // Create Managers
 if (!fs.existsSync(`${path}src/core/managers`)) {
     fs.mkdirSync(`${path}src/core/managers`)
@@ -153,7 +206,7 @@ for (let index in actions) {
     } else {
         let contents = fs.readFileSync(`${path}src/core/managers/sdkManager.js`, 'utf8');
         contents = contents.replace('//.import', `import ${upperCaseFisrt(actions[index])}SDK from './../api-sdk/${lowerCaseFirst(actions[index])}SDK';\n//.import`);
-        contents = contents.replace('//.construct', `const ${lowerCaseFirst(actions[index])}SDK = new ${upperCaseFisrt(actions[index])}SDK(ServiceManager.networkService, ServiceManager.appConstants);\n//.construct`);
+        contents = contents.replace('//.construct', `const ${lowerCaseFirst(actions[index])}SDK = new ${upperCaseFisrt(actions[index])}SDK(ServiceManager.networkService);\n//.construct`);
         contents = contents.replace('//.export', `${lowerCaseFirst(actions[index])}SDK,\n//.export`);
         fs.writeFileSync(`${path}src/core/managers/sdkManager.js`, contents);
     }
@@ -171,24 +224,16 @@ for (let index in actions) {
     }
 }
 
-
-if (!fs.existsSync(`${path}src/core/services`)) {
-    fs.mkdirSync(`${path}src/core/services`)
-}
-
-if (!fs.existsSync(`${path}src/core/services/network`)) {
-    fs.mkdirSync(`${path}src/core/services/network`)
+if (!fs.existsSync(`${path}src/core/managers/serviceManager.js`)) {
+    fs.writeFileSync(`${path}src/core/managers/serviceManager.js`, getDataForServiceManager());
 }
 
 
-if (!fs.existsSync(`${path}src/core/services/network/networkService.js`)) {
-    fs.writeFileSync(`${path}src/core/services/network/networkService.js`, getDataForNetworkService());
+// Constants
+if (!fs.existsSync(`${path}src/core/settings`)) {
+    fs.mkdirSync(`${path}src/core/settings`);
 }
 
-if (!fs.existsSync(`${path}src/core/services/storage`)) {
-    fs.mkdirSync(`${path}src/core/services/storage`)
-}
-
-if (!fs.existsSync(`${path}src/core/services/storage/cacheService.js`)) {
-    fs.writeFileSync(`${path}src/core/services/storage/cacheService.js`, getDataForCacheService());
+if (!fs.existsSync(`${path}src/core/settings/constants.js`)) {
+    fs.writeFileSync(`${path}src/core/settings/constants.js`, getDataForConstants());
 }
