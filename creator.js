@@ -15,6 +15,7 @@ const { getDataForExceptionHandlerService } = require('./data/dataForExceptionHa
 const { getBaseException, getBadRequestException, getTokenExpiredException, getInternalException } = require('./data/dataForExceptions');
 const { getDataForConstants } = require('./data/dataForConstants');
 const { getEjsFile, getDataForApiHosts, getDataForWebpackConfig, getDataForWebpackConstants } = require('./data/dataForWebpack');
+const { getDataForHistory } = require('./data/dataForHistory');
 
 
 let path = process.argv[3] || './';
@@ -78,6 +79,7 @@ for (let index in actions) {
 
 
 
+
 // Create Action Invoking Middleware
 if (!fs.existsSync(`${path}src/core/store/middleware`)) {
     fs.mkdirSync(`${path}src/core/store/middleware`);
@@ -93,14 +95,14 @@ if (!fs.existsSync(`${path}src/core/store/reducers`)) {
 }
 
 for (let index in actions) {
-    if (!fs.existsSync(`${path}src/core/store/reducers/combineReducer.js`)) {
-        fs.writeFileSync(`${path}src/core/store/reducers/combineReducer.js`, getDataForCombineReducer(actions[index]));
+    if (!fs.existsSync(`${path}src/core/store/reducers/combineReducers.js`)) {
+        fs.writeFileSync(`${path}src/core/store/reducers/combineReducers.js`, getDataForCombineReducer(actions[index]));
     } else {
-        let contents = fs.readFileSync(`${path}src/core/store/reducers/combineReducer.js`, 'utf8');
+        let contents = fs.readFileSync(`${path}src/core/store/reducers/combineReducers.js`, 'utf8');
         contents = contents.replace('//.import', `import ${lowerCaseFirst(actions[index])}Reducer from './${lowerCaseFirst(actions[index])}Reducer';\n//.import`);
         contents = contents.replace('//.construct', `${lowerCaseFirst(actions[index])}Reducer,\n//.construct`);
 
-        fs.writeFileSync(`${path}src/core/store/reducers/combineReducer.js`, contents);
+        fs.writeFileSync(`${path}src/core/store/reducers/combineReducers.js`, contents);
     }
     fs.writeFileSync(`${path}src/core/store/reducers/${lowerCaseFirst(actions[index])}Reducer.js`, getDataForReducer(actions[index]));
 }
@@ -120,6 +122,12 @@ for (let index in actions) {
 // Create Store
 if (!fs.existsSync(`${path}src/core/store/store.js`)) {
     fs.writeFileSync(`${path}src/core/store/store.js`, getDataForStore());
+}
+
+// Create history
+if (!fs.existsSync(`${path}src/core/history`)) {
+    fs.mkdirSync(`${path}src/core/history`);
+    fs.writeFileSync(`${path}src/core/history/index.js`, getDataForHistory());
 }
 
 
