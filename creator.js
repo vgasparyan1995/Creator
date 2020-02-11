@@ -14,10 +14,19 @@ const { getDataForCacheService } = require('./data/dataForCacheService');
 const { getDataForExceptionHandlerService } = require('./data/dataForExceptionHandlerSerivce');
 const { getBaseException, getBadRequestException, getTokenExpiredException, getInternalException } = require('./data/dataForExceptions');
 const { getDataForConstants } = require('./data/dataForConstants');
-let path = process.argv[3] || './';
+const { getEjsFile, getDataForApiHosts, getDataForWebpackConfig, getDataForWebpackConstants } = require('./data/dataForWebpack');
 
+
+let path = process.argv[3] || './';
 let options = JSON.parse(process.argv[2]);
+
 let actions = options.actions || [];
+let webpack = options.webpack || false;
+
+
+if (!fs.existsSync(`${path}`)) {
+    fs.mkdirSync(`${path}`)
+}
 
 if (!fs.existsSync(`${path}src`)) {
     fs.mkdirSync(`${path}src`)
@@ -236,4 +245,21 @@ if (!fs.existsSync(`${path}src/core/settings`)) {
 
 if (!fs.existsSync(`${path}src/core/settings/constants.js`)) {
     fs.writeFileSync(`${path}src/core/settings/constants.js`, getDataForConstants());
+}
+
+
+// Create Webpack
+if (webpack) {
+    if (!fs.existsSync(`${path}webpack.constants.json`)) {
+        fs.writeFileSync(`${path}webpack.constants.json`, getDataForWebpackConstants());
+    }
+    if (!fs.existsSync(`${path}api-hosts.json`)) {
+        fs.writeFileSync(`${path}api-hosts.json`, getDataForApiHosts());
+    }
+    if (!fs.existsSync(`${path}index.ejs`)) {
+        fs.writeFileSync(`${path}index.ejs`, getEjsFile());
+    }
+    if (!fs.existsSync(`${path}webpack.config.js`)) {
+        fs.writeFileSync(`${path}webpack.config.js`, getDataForWebpackConfig());
+    }
 }
