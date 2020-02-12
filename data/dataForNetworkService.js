@@ -1,7 +1,7 @@
 function getDataForNetworkService() {
     return `import AppConstants from './../../settings/constants.js';
 
-    class NetworkService {
+class NetworkService {
     
     constructor(exception_handler_service, cache_service) {
         this._exception_handler_service = exception_handler_service;
@@ -81,7 +81,7 @@ function getDataForNetworkService() {
                 options.method = AppConstants.network.network_request_methods.GET;
             }
 
-            let user_token = this._cache_service.getUserToken();
+            let user_token = this._cache_service.get('token);
             let fetch_options = {
                 method: options.method,
                 headers: options.headers || {

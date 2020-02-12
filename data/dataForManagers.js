@@ -54,7 +54,7 @@ export default {
 function getDataForServiceManager() {
     return `import cacheService from './../services/storage/cacheService';
 import NetworkService from './../services/network/networkService';
-import ExceptionHanglerService from './../services/exception/exceptionHandlerService';
+import ExceptionHandlerService from './../services/exception/exceptionHandlerService';
 
 import InternalException from './../services/exception/types/internalException';
 import BadRequestException from './../services/exception/types/badRequestException';
@@ -66,7 +66,7 @@ const tokenExpiredException = new TokenExpiredException();
 
 const exceptions = [internalException, badRequestException, tokenExpiredException];
 
-const exceptionHandlerService = new ExceptionHanglerService(exceptions);
+const exceptionHandlerService = new ExceptionHandlerService(exceptions);
 const networkService = new NetworkService(exceptionHandlerService, cacheService);
 
 export default {
