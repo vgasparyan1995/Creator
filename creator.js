@@ -16,6 +16,7 @@ const { getBaseException, getBadRequestException, getTokenExpiredException, getI
 const { getDataForConstants } = require('./data/dataForConstants');
 const { getEjsFile, getDataForApiHosts, getDataForWebpackConfig, getDataForWebpackConstants } = require('./data/dataForWebpack');
 const { getDataForHistory } = require('./data/dataForHistory');
+const { getDataForIndex, getDataForScss, getDateForSassSettings, getDataForPackage } =  require('./data/dataForMain');
 
 
 let path = process.argv[3] || './';
@@ -271,3 +272,31 @@ if (webpack) {
         fs.writeFileSync(`${path}webpack.config.js`, getDataForWebpackConfig());
     }
 }
+
+
+// Create Main
+if (!fs.existsSync(`${path}package.json`)) {
+    fs.writeFileSync(`${path}package.json`, getDataForPackage('MyApp'));
+}
+
+if (!fs.existsSync(`${path}src/index.js`)) {
+    fs.writeFileSync(`${path}src/index.js`, getDataForIndex());
+}
+
+if (!fs.existsSync(`${path}src/assets`)) {
+    fs.mkdirSync(`${path}src/assets`);
+}
+
+if (!fs.existsSync(`${path}src/assets/sass`)) {
+    fs.mkdirSync(`${path}src/assets/sass`);
+}
+
+if (!fs.existsSync(`${path}src/assets/sass/_settings.scss`)) {
+    fs.writeFileSync(`${path}src/assets/sass/_settings.scss`, getDateForSassSettings());
+}
+
+
+if (!fs.existsSync(`${path}src/index.scss`)) {
+    fs.writeFileSync(`${path}src/index.scss`, getDataForScss());
+}
+

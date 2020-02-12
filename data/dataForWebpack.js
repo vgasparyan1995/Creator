@@ -21,7 +21,8 @@ function getDataForApiHosts() {
 ` 
 }
 
-function getDataForWebpackConfig() {
+function getDataForWebpackConfig(appliactionName) {
+    appliactionName = appliactionName || '';
     return `const webpack = require('webpack');
 const fs = require('fs');
 const path = require('path');
@@ -52,7 +53,7 @@ const PLUGINS = [
         hash: (currentEnv !== ENVS.production),
         mode: currentEnv,
         version: version,
-        title: "My Applocation"
+        title: "${appliactionName}"
     }),
     new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(currentEnv),

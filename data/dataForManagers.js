@@ -57,7 +57,7 @@ import NetworkService from './../services/network/networkService';
 import ExceptionHanglerService from './../services/exception/exceptionHandlerService';
 
 import InternalException from './../services/exception/types/internalException';
-import BadRequestException from './../services/exception/types/badRequestExcpetion';
+import BadRequestException from './../services/exception/types/badRequestException';
 import TokenExpiredException from './../services/exception/types/tokenExpiredException';
 
 const internalException = new InternalException();
