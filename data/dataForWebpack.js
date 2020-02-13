@@ -72,7 +72,7 @@ if (currentEnv === ENVS.production) {
 
 const LOADERS = [
     {
-        test: /\.js$/,
+        test: /\\.js$/,
         exclude: /node_modules/,
         use: {
             loader: 'babel-loader',
@@ -89,32 +89,32 @@ const LOADERS = [
         }
     },
     {
-        test: /\.scss$/,
+        test: /\\.scss$/,
         loaders: ['style-loader', 'css-loader', 'sass-loader']
     },
     {
-        test: /\.css$/,
+        test: /\\.css$/,
         loaders: ['style-loader', 'css-loader']
     },
     {
-        test: /\.(svg|png|jpg|jpeg|gif)$/,
+        test: /\\.(svg|png|jpg|jpeg|gif)$/,
         exclude: /gltf/,
         loader: 'url-loader?limit=5120&name=./[hash].[ext]'
     },
     {
-        test: /\.(mp3|mp4)$/,
+        test: /\\.(mp3|mp4)$/,
         loader: 'file-loader'
     },
     {
-        test: /\.(ttf|otf|eot|woff(2)?)(\?[a-z0-9]+)?$/,
+        test: /\\.(ttf|otf|eot|woff(2)?)(\\?[a-z0-9]+)?$/,
         loader: 'file-loader'
     },
     {
-        test: /\.(gltf)$/,
+        test: /\\.(gltf)$/,
         loader: 'gltf-loader-2'
     },
     {
-        test: /gltf.*\.(bin|png|jpe?g|gif)$/,
+        test: /gltf.*\\.(bin|png|jpe?g|gif)$/,
         loader: 'file-loader',
         options: {
             name: '[name].[hash:7].[ext]'
