@@ -1,6 +1,6 @@
 const fs = require('fs');
-const { upperCaseFisrt, lowerCaseFirst } = require('./helper');
-const { getDataForActionType, getDataForActionCreator } = require('./data/dataForActions');
+const { upperCaseFisrt, lowerCaseFirst, convertCamelCase } = require('./helper');
+const { getDataForActionType, getDataForActionCreator, getCustomActionCreator, getCustomActionType, getDefaultActionCreator, getDefaultActionType } = require('./data/dataForActions');
 const { getDataForActionsRegistration, getIndexActionsRegistration } = require('./data/dataForActionsRegistration');
 const { getDataForReducer, getDataForCombineReducer } = require('./data/dataForReducer');
 const { getDataForSelector } = require('./data/dataForSelector');
@@ -24,15 +24,19 @@ function _createActionsRegistration(path, actions) {
     }
 
     for (let index in actions) {
-        fs.writeFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(actions[index])}Registration.js`, getDataForActionsRegistration(actions[index]));
-        if (!fs.existsSync(`${path}src/core/store/actionsRegistration/index.js`)) {
-            fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, getIndexActionsRegistration(actions[index]));
-        } else {
-            let contents = fs.readFileSync(`${path}src/core/store/actionsRegistration/index.js`, 'utf8');
-            contents = contents.replace('//.import', `import ${lowerCaseFirst(actions[index])}Registration from './${lowerCaseFirst(actions[index])}Registration';\n//.import`);
-            contents = contents.replace('//.construct', `${lowerCaseFirst(actions[index])}Registration(configs);\n//.construct`);
+        if (typeof actions[index] === 'string') {
+            fs.writeFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(actions[index])}Registration.js`, getDataForActionsRegistration(actions[index]));
+            if (!fs.existsSync(`${path}src/core/store/actionsRegistration/index.js`)) {
+                fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, getIndexActionsRegistration(actions[index]));
+            } else {
+                let contents = fs.readFileSync(`${path}src/core/store/actionsRegistration/index.js`, 'utf8');
+                contents = contents.replace('//.import', `import ${lowerCaseFirst(actions[index])}Registration from './${lowerCaseFirst(actions[index])}Registration';\n//.import`);
+                contents = contents.replace('//.construct', `${lowerCaseFirst(actions[index])}Registration(configs);\n//.construct`);
 
-            fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, contents);
+                fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, contents);
+            }
+        } else {
+
         }
     }
 }
@@ -234,13 +238,18 @@ function _createConstants(path) {
     if (!fs.existsSync(`${path}src/core/settings`)) {
         fs.mkdirSync(`${path}src/core/settings`);
     }
-    
+
     if (!fs.existsSync(`${path}src/core/settings/constants.js`)) {
         fs.writeFileSync(`${path}src/core/settings/constants.js`, getDataForConstants());
     }
 }
 
 function createWebpack(path, appName) {
+
+    if (!fs.existsSync(`${path}`)) {
+        fs.mkdirSync(`${path}`)
+    }
+
     if (!fs.existsSync(`${path}webpack.constants.json`)) {
         fs.writeFileSync(`${path}webpack.constants.json`, getDataForWebpackConstants());
     }
@@ -315,7 +324,8 @@ function createActions(path, actions) {
 
     for (let index in actions) {
         if (typeof actions[index] === 'string') {
-            fs.mkdirSync(`${path}src/core/store/actions/${lowerCaseFirst(actions[index])}`);
+            if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(actions[index])}`))
+                fs.mkdirSync(`${path}src/core/store/actions/${lowerCaseFirst(actions[index])}`);
             if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(actions[index])}/${lowerCaseFirst(actions[index])}ActionCreator.js`))
                 fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(actions[index])}/${lowerCaseFirst(actions[index])}ActionCreator.js`, getDataForActionCreator(actions[index]));
 
@@ -323,7 +333,31 @@ function createActions(path, actions) {
                 fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(actions[index])}/${lowerCaseFirst(actions[index])}ActionType.js`, getDataForActionType(actions[index]));
 
         } else {
-            // TODO:
+            if (!actions[index].function_name || !actions[index].action_name) break;
+
+            const action = actions[index].action_name;
+            const function_name = actions[index].function_name || null;
+            const action_type =  convertCamelCase(function_name);
+
+            if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}`))
+                fs.mkdirSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}`);
+
+            if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionCreator.js`)) 
+                fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionCreator.js`, getDefaultActionCreator(action));
+
+
+            if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionType.js`)) 
+                fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionType.js`, getDefaultActionType(action));
+            
+            let contentsActionCreator = fs.readFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionCreator.js`, 'utf8');
+            contentsActionCreator = contentsActionCreator.replace('//.function', getCustomActionCreator(action, function_name, action_type));
+            fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionCreator.js`, contentsActionCreator);
+
+            
+            let contentsActionType = fs.readFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionType.js`, 'utf8');
+            contentsActionType = contentsActionType.replace('//.type', getCustomActionType(action_type));
+            fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionType.js`, contentsActionType);
+
         }
     }
     _createActionsRegistration(path, actions);

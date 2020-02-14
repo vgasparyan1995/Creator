@@ -75,6 +75,8 @@ export function reset${typeFirstUpperCase}s(payload) {
         payload
     }
 }
+
+//.function
 `;
 }
 
@@ -96,13 +98,62 @@ function getDataForActionType(type) {
 
     SAVE_${type.toUpperCase()}S: "save_${type.toLowerCase()}s",
     RESET_${type.toUpperCase()}S: "reset_${type.toLowerCase()}s",
+    //.type
 }
 
 export default ${typeFirstUpperCase}ActionType;
 `;
 }
 
+function getCustomActionCreator(action, functionName, actionType) {
+    const typeFirstUpperCase = upperCaseFisrt(action);
+    return `export function ${functionName}(payload) {
+    return {
+        type: ${typeFirstUpperCase}ActionType.${actionType},
+        payload
+    }
+}
+
+//.function
+`
+}
+
+function getCustomActionType(actionType) {
+    return `${actionType}: "${actionType.toLowerCase()}",
+//.type
+`
+}
+
+function getDefaultActionCreator(type) {
+
+    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `import ${typeFirstUpperCase}ActionType from "./${typeFirstLowerCase}ActionType";
+
+//.function
+`;
+
+}
+
+function getDefaultActionType(type) {
+    const typeFirstUpperCase = upperCaseFisrt(type);
+
+    return `const ${typeFirstUpperCase}ActionType = {
+    //.type
+}
+
+export default ${typeFirstUpperCase}ActionType;
+`;
+}
+
+
+
 module.exports = {
     getDataForActionCreator,
     getDataForActionType,
+    getCustomActionCreator,
+    getCustomActionType,
+    getDefaultActionCreator,
+    getDefaultActionType,
 };
