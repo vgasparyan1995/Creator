@@ -12,9 +12,25 @@ export default function ${typeFirstLowerCase}Registration(configs) {
     configs.set(${typeFirstUpperCase}ActionTypes.ADD_${type.toUpperCase()}, ${typeFirstLowerCase}.add.bind(${typeFirstLowerCase}));
     configs.set(${typeFirstUpperCase}ActionTypes.EDIT_${type.toUpperCase()}, ${typeFirstLowerCase}.edit.bind(${typeFirstLowerCase}));
     configs.set(${typeFirstUpperCase}ActionTypes.DELETE_${type.toUpperCase()}, ${typeFirstLowerCase}.delete.bind(${typeFirstLowerCase}));
+    //.set
 }
 `
 }
+
+function getDataForActionsRegistrationDefault(type, functionName, actionType) {
+    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `import ${typeFirstUpperCase}ActionTypes from "./../actions/${typeFirstLowerCase}/${typeFirstLowerCase}ActionType";
+import {${typeFirstLowerCase}} from "./../../managers/controllerManager";
+    
+export default function ${typeFirstLowerCase}Registration(configs) {
+    configs.set(${typeFirstUpperCase}ActionTypes.${actionType}, ${typeFirstLowerCase}.${functionName}.bind(${typeFirstLowerCase}));
+    //.set
+}
+`
+}
+
 
 function getIndexActionsRegistration(type) {
     const typeFirstLowerCase = lowerCaseFirst(type);
@@ -34,4 +50,5 @@ export default configs;
 module.exports = {
     getDataForActionsRegistration,
     getIndexActionsRegistration,
+    getDataForActionsRegistrationDefault,
 };

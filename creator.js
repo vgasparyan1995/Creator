@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { upperCaseFisrt, lowerCaseFirst, convertCamelCase } = require('./helper');
 const { getDataForActionType, getDataForActionCreator, getCustomActionCreator, getCustomActionType, getDefaultActionCreator, getDefaultActionType } = require('./data/dataForActions');
-const { getDataForActionsRegistration, getIndexActionsRegistration } = require('./data/dataForActionsRegistration');
+const { getDataForActionsRegistration, getIndexActionsRegistration, getDataForActionsRegistrationDefault } = require('./data/dataForActionsRegistration');
 const { getDataForReducer, getDataForCombineReducer } = require('./data/dataForReducer');
 const { getDataForSelector } = require('./data/dataForSelector');
 const { getDataForActionInvokingMiddleware } = require('./data/dataForActionInvokingMiddleware');
@@ -25,7 +25,8 @@ function _createActionsRegistration(path, actions) {
 
     for (let index in actions) {
         if (typeof actions[index] === 'string') {
-            fs.writeFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(actions[index])}Registration.js`, getDataForActionsRegistration(actions[index]));
+            if (!fs.existsSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(actions[index])}Registration.js`))
+                fs.writeFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(actions[index])}Registration.js`, getDataForActionsRegistration(actions[index]));
             if (!fs.existsSync(`${path}src/core/store/actionsRegistration/index.js`)) {
                 fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, getIndexActionsRegistration(actions[index]));
             } else {
@@ -36,7 +37,28 @@ function _createActionsRegistration(path, actions) {
                 fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, contents);
             }
         } else {
+            if (!actions[index].function_name || !actions[index].action_name) break;
+            const action = actions[index].action_name;
+            const function_name = actions[index].function_name || null;
+            const action_type =  convertCamelCase(function_name);
 
+            if (!fs.existsSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(action)}Registration.js`))
+                fs.writeFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(action)}Registration.js`, getDataForActionsRegistrationDefault(action, function_name, action_type));
+            else {
+                let contents = fs.readFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(action)}Registration.js`, 'utf8');
+                contents = contents.replace('//.set', `configs.set(${upperCaseFisrt(action)}ActionTypes.${action_type}, ${lowerCaseFirst(action)}.${function_name}.bind(${lowerCaseFirst(action)}));\n//.set`);
+                fs.writeFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(action)}Registration.js`, contents);
+            }
+
+            if (!fs.existsSync(`${path}src/core/store/actionsRegistration/index.js`)) {
+                fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, getIndexActionsRegistration(action));
+            } else {
+                let contents = fs.readFileSync(`${path}src/core/store/actionsRegistration/index.js`, 'utf8');
+                isActionRegistrationImport = contents.includes(`${lowerCaseFirst(action)}Registration`);
+                console.log('------', isActionRegistrationImport)
+                if (!isActionRegistrationImport)
+                    fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`,  getIndexActionsRegistration(action));
+            }
         }
     }
 }
