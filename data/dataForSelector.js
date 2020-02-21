@@ -15,7 +15,7 @@ function getDataForSelector(type) {
     }
     
     getDataLoading(state) {
-        return this._getReducer(state).get${typeFirstLowerCase}sLoading;
+        return this._getReducer(state).get${typeFirstUpperCase}sLoading;
     }
     
     addDataLoading(state) {
@@ -28,7 +28,9 @@ function getDataForSelector(type) {
 
     deleteDataLoading(state) {
         return this._getReducer(state).delete${typeFirstUpperCase}Loading;
-    }    
+    }
+    
+    //.function
 }
 export default new ${typeFirstUpperCase}Selector();
 `

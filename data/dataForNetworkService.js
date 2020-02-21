@@ -81,7 +81,7 @@ class NetworkService {
                 options.method = AppConstants.network.network_request_methods.GET;
             }
 
-            let user_token = this._cache_service.get('token);
+            let user_token = this._cache_service.get('token');
             let fetch_options = {
                 method: options.method,
                 headers: options.headers || {

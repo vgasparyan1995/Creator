@@ -2,7 +2,7 @@ const fs = require('fs');
 const { upperCaseFisrt, lowerCaseFirst, convertCamelCase } = require('./helper');
 const { getDataForActionType, getDataForActionCreator, getCustomActionCreator, getCustomActionType, getDefaultActionCreator, getDefaultActionType } = require('./data/dataForActions');
 const { getDataForActionsRegistration, getIndexActionsRegistration, getDataForActionsRegistrationDefault } = require('./data/dataForActionsRegistration');
-const { getDataForReducer, getDataForCombineReducer } = require('./data/dataForReducer');
+const { getDataForReducer, getDataForCombineReducer, getDataForReducerDefault, getCustomCase } = require('./data/dataForReducer');
 const { getDataForSelector } = require('./data/dataForSelector');
 const { getDataForActionInvokingMiddleware } = require('./data/dataForActionInvokingMiddleware');
 const { getDataForStore } = require('./data/dataForStore');
@@ -33,14 +33,13 @@ function _createActionsRegistration(path, actions) {
                 let contents = fs.readFileSync(`${path}src/core/store/actionsRegistration/index.js`, 'utf8');
                 contents = contents.replace('//.import', `import ${lowerCaseFirst(actions[index])}Registration from './${lowerCaseFirst(actions[index])}Registration';\n//.import`);
                 contents = contents.replace('//.construct', `${lowerCaseFirst(actions[index])}Registration(configs);\n//.construct`);
-
                 fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, contents);
             }
         } else {
             if (!actions[index].function_name || !actions[index].action_name) break;
             const action = actions[index].action_name;
             const function_name = actions[index].function_name || null;
-            const action_type =  convertCamelCase(function_name);
+            const action_type = convertCamelCase(function_name);
 
             if (!fs.existsSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(action)}Registration.js`))
                 fs.writeFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(action)}Registration.js`, getDataForActionsRegistrationDefault(action, function_name, action_type));
@@ -54,10 +53,12 @@ function _createActionsRegistration(path, actions) {
                 fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, getIndexActionsRegistration(action));
             } else {
                 let contents = fs.readFileSync(`${path}src/core/store/actionsRegistration/index.js`, 'utf8');
-                isActionRegistrationImport = contents.includes(`${lowerCaseFirst(action)}Registration`);
-                console.log('------', isActionRegistrationImport)
-                if (!isActionRegistrationImport)
-                    fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`,  getIndexActionsRegistration(action));
+                let isActionRegistrationImport = contents.includes(`${lowerCaseFirst(action)}Registration`);
+                if (!isActionRegistrationImport) {
+                    contents = contents.replace('//.import', `import ${lowerCaseFirst(action)}Registration from './${lowerCaseFirst(action)}Registration';\n//.import`);
+                    contents = contents.replace('//.construct', `${lowerCaseFirst(action)}Registration(configs);\n//.construct`);
+                    fs.writeFileSync(`${path}src/core/store/actionsRegistration/index.js`, contents);
+                }
             }
         }
     }
@@ -76,21 +77,47 @@ function _createReducer(path, actions) {
     }
 
     for (let index in actions) {
-        if (!fs.existsSync(`${path}src/core/store/reducers/combineReducers.js`)) {
-            fs.writeFileSync(`${path}src/core/store/reducers/combineReducers.js`, getDataForCombineReducer(actions[index]));
-        } else {
-            let contents = fs.readFileSync(`${path}src/core/store/reducers/combineReducers.js`, 'utf8');
-            contents = contents.replace('//.import', `import ${lowerCaseFirst(actions[index])}Reducer from './${lowerCaseFirst(actions[index])}Reducer';\n//.import`);
-            contents = contents.replace('//.construct', `${lowerCaseFirst(actions[index])}Reducer,\n//.construct`);
 
-            fs.writeFileSync(`${path}src/core/store/reducers/combineReducers.js`, contents);
-        }
         if (typeof actions[index] === 'string') {
             if (!fs.existsSync(`${path}src/core/store/reducers/${lowerCaseFirst(actions[index])}Reducer.js`)) {
                 fs.writeFileSync(`${path}src/core/store/reducers/${lowerCaseFirst(actions[index])}Reducer.js`, getDataForReducer(actions[index]));
             }
+            if (!fs.existsSync(`${path}src/core/store/reducers/combineReducers.js`)) {
+                fs.writeFileSync(`${path}src/core/store/reducers/combineReducers.js`, getDataForCombineReducer(actions[index]));
+            } else {
+                let contents = fs.readFileSync(`${path}src/core/store/reducers/combineReducers.js`, 'utf8');
+                contents = contents.replace('//.import', `import ${lowerCaseFirst(actions[index])}Reducer from './${lowerCaseFirst(actions[index])}Reducer';\n//.import`);
+                contents = contents.replace('//.construct', `${lowerCaseFirst(actions[index])}Reducer,\n//.construct`);
+                fs.writeFileSync(`${path}src/core/store/reducers/combineReducers.js`, contents);
+            }
         } else {
-            // TODO:
+            if (!actions[index].function_name || !actions[index].action_name) break;
+            const action = actions[index].action_name;
+            const function_name = actions[index].function_name || null;
+            const action_type =  convertCamelCase(function_name);
+            const loading_state =  actions[index].loading || false;
+
+            if (!fs.existsSync(`${path}src/core/store/reducers/${lowerCaseFirst(action)}Reducer.js`)) {
+                fs.writeFileSync(`${path}src/core/store/reducers/${lowerCaseFirst(action)}Reducer.js`, getDataForReducerDefault(action, function_name, action_type, loading_state));
+            } else {
+                let contents = fs.readFileSync(`${path}src/core/store/reducers/${lowerCaseFirst(action)}Reducer.js`, 'utf8');
+                contents = contents.replace('//.case', getCustomCase(action, function_name, action_type, loading_state));
+                fs.writeFileSync(`${path}src/core/store/reducers/${lowerCaseFirst(action)}Reducer.js`, contents);
+            }
+
+            if (!fs.existsSync(`${path}src/core/store/reducers/combineReducers.js`)) {
+                fs.writeFileSync(`${path}src/core/store/reducers/combineReducers.js`, getDataForCombineReducer(action));
+            } else {
+                let contents = fs.readFileSync(`${path}src/core/store/reducers/combineReducers.js`, 'utf8');
+                let isReducerCombine = contents.includes(`${path}src/core/store/reducers/combineReducers.js`);
+
+                if (!isReducerCombine) {
+                    contents = contents.replace('//.import', `import ${lowerCaseFirst(action)}Reducer from './${lowerCaseFirst(action)}Reducer';\n//.import`);
+                    contents = contents.replace('//.construct', `${lowerCaseFirst(action)}Reducer,\n//.construct`);
+                    fs.writeFileSync(`${path}src/core/store/reducers/combineReducers.js`, contents);
+
+                }
+            }
         }
     }
 }
@@ -359,25 +386,26 @@ function createActions(path, actions) {
 
             const action = actions[index].action_name;
             const function_name = actions[index].function_name || null;
-            const action_type =  convertCamelCase(function_name);
+            const action_type = convertCamelCase(function_name);
+            const loading_state = actions[index].loading || false;
 
             if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}`))
                 fs.mkdirSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}`);
 
-            if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionCreator.js`)) 
+            if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionCreator.js`))
                 fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionCreator.js`, getDefaultActionCreator(action));
 
 
-            if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionType.js`)) 
+            if (!fs.existsSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionType.js`))
                 fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionType.js`, getDefaultActionType(action));
-            
+
             let contentsActionCreator = fs.readFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionCreator.js`, 'utf8');
-            contentsActionCreator = contentsActionCreator.replace('//.function', getCustomActionCreator(action, function_name, action_type));
+            contentsActionCreator = contentsActionCreator.replace('//.function', getCustomActionCreator(action, function_name, action_type, loading_state));
             fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionCreator.js`, contentsActionCreator);
 
-            
+
             let contentsActionType = fs.readFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionType.js`, 'utf8');
-            contentsActionType = contentsActionType.replace('//.type', getCustomActionType(action_type));
+            contentsActionType = contentsActionType.replace('//.type', getCustomActionType(action_type, loading_state));
             fs.writeFileSync(`${path}src/core/store/actions/${lowerCaseFirst(action)}/${lowerCaseFirst(action)}ActionType.js`, contentsActionType);
 
         }

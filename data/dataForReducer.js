@@ -43,12 +43,68 @@ function getDataForReducer(type) {
                 };
             case ${typeFirstUpperCase}ActionType.RESET_${type.toUpperCase()}S:
                 return initialState;
+            //.case
             default:
                 return state;
         }
     };  
 export default ${typeFirstLowerCase}Reducer;
 `
+}
+
+function getDataForReducerDefault(type, property, action_type, loading) {
+    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstLowerCase = lowerCaseFirst(type);
+
+    return `import ${typeFirstUpperCase}ActionType from "../actions/${typeFirstLowerCase}/${typeFirstLowerCase}ActionType";
+
+    const initialState = {
+        ${property}: null,
+        ${loading ? `${property}Loading: false,`: ''}
+    };
+    
+    const ${typeFirstLowerCase}Reducer = (state = initialState, action) => {
+        switch (action.type) {
+            case ${typeFirstUpperCase}ActionType.${action_type}:
+                return {
+                    ...state,
+                    ${property}: action.payload.data
+                };
+            ${
+                loading ? 
+                `case ${typeFirstUpperCase}ActionType.${action_type}_LOADING:
+                return {
+                    ...state,
+                    ${property}Loading: action.payload.loading
+                };` : ''
+            }    
+            //.case
+            default:
+                return state;
+        }
+    };  
+export default ${typeFirstLowerCase}Reducer;
+`
+}
+
+function getCustomCase(type, property, action_type, loading) {
+    const typeFirstUpperCase = upperCaseFisrt(type);
+
+    return `case ${typeFirstUpperCase}ActionType.${action_type}:
+return {
+    ...state,
+    ${property}: action.payload.data
+};
+${
+    loading ? 
+    `case ${typeFirstUpperCase}ActionType.${action_type}_LOADING:
+return {
+    ...state,
+    ${property}Loading: action.payload.loading
+};
+//.case
+` : ''
+}  `
 }
 
 function getDataForCombineReducer(type) {
@@ -74,5 +130,7 @@ export default RootReducer;
 
 module.exports = {
     getDataForReducer,
-    getDataForCombineReducer
+    getDataForCombineReducer,
+    getDataForReducerDefault,
+    getCustomCase,
 };

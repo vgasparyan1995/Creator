@@ -105,7 +105,7 @@ export default ${typeFirstUpperCase}ActionType;
 `;
 }
 
-function getCustomActionCreator(action, functionName, actionType) {
+function getCustomActionCreator(action, functionName, actionType, loading) {
     const typeFirstUpperCase = upperCaseFisrt(action);
     return `export function ${functionName}(payload) {
     return {
@@ -114,12 +114,21 @@ function getCustomActionCreator(action, functionName, actionType) {
     }
 }
 
+${loading ? 
+    `export function ${functionName}Loading(payload) {
+    return {
+        type: ${typeFirstUpperCase}ActionType.${actionType}_LOADING,
+        payload
+    }
+}` : ''}
+
 //.function
 `
 }
 
-function getCustomActionType(actionType) {
+function getCustomActionType(actionType, loading) {
     return `${actionType}: "${actionType.toLowerCase()}",
+${loading ? `${actionType}_LOADING: "${actionType.toLowerCase()}_loading",` : ''}
 //.type
 `
 }
