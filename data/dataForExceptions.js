@@ -1,5 +1,5 @@
 function getBaseException() {
-    return `class BaseExcpetion {
+    return `class BaseException {
     next = {
         handleRequest: function () {
         }

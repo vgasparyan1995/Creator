@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { upperCaseFisrt, lowerCaseFirst, convertCamelCase } = require('./helper');
+const { upperCaseFirst, lowerCaseFirst, convertCamelCase } = require('./helper');
 const { getDataForActionType, getDataForActionCreator, getCustomActionCreator, getCustomActionType, getDefaultActionCreator, getDefaultActionType } = require('./data/dataForActions');
 const { getDataForActionsRegistration, getIndexActionsRegistration, getDataForActionsRegistrationDefault } = require('./data/dataForActionsRegistration');
 const { getDataForReducer, getDataForCombineReducer, getDataForReducerDefault, getCustomCase } = require('./data/dataForReducer');
@@ -45,7 +45,7 @@ function _createActionsRegistration(path, actions) {
                 fs.writeFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(action)}Registration.js`, getDataForActionsRegistrationDefault(action, function_name, action_type));
             else {
                 let contents = fs.readFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(action)}Registration.js`, 'utf8');
-                contents = contents.replace('//.set', `configs.set(${upperCaseFisrt(action)}ActionTypes.${action_type}, ${lowerCaseFirst(action)}.${function_name}.bind(${lowerCaseFirst(action)}));\n//.set`);
+                contents = contents.replace('//.set', `configs.set(${upperCaseFirst(action)}ActionTypes.${action_type}, ${lowerCaseFirst(action)}.${function_name}.bind(${lowerCaseFirst(action)}));\n//.set`);
                 fs.writeFileSync(`${path}src/core/store/actionsRegistration/${lowerCaseFirst(action)}Registration.js`, contents);
             }
 
@@ -235,8 +235,8 @@ function _createManagers(path, actions) {
                 fs.writeFileSync(`${path}src/core/managers/controllerManager.js`, getDataForControllerManager(actions[index]));
             } else {
                 let contents = fs.readFileSync(`${path}src/core/managers/controllerManager.js`, 'utf8');
-                contents = contents.replace('//.import', `import ${upperCaseFisrt(actions[index])}Controller from './../controllers/${lowerCaseFirst(actions[index])}Controller';\n//.import`);
-                contents = contents.replace('//.construct', `const ${lowerCaseFirst(actions[index])} = new ${upperCaseFisrt(actions[index])}Controller(SelectorManager.${lowerCaseFirst(actions[index])}Selector, SdkManager.${lowerCaseFirst(actions[index])}SDK);\n//.construct`);
+                contents = contents.replace('//.import', `import ${upperCaseFirst(actions[index])}Controller from './../controllers/${lowerCaseFirst(actions[index])}Controller';\n//.import`);
+                contents = contents.replace('//.construct', `const ${lowerCaseFirst(actions[index])} = new ${upperCaseFirst(actions[index])}Controller(SelectorManager.${lowerCaseFirst(actions[index])}Selector, SdkManager.${lowerCaseFirst(actions[index])}SDK);\n//.construct`);
                 contents = contents.replace('//.export', `${lowerCaseFirst(actions[index])},\n//.export`);
                 fs.writeFileSync(`${path}src/core/managers/controllerManager.js`, contents);
             }
@@ -252,8 +252,8 @@ function _createManagers(path, actions) {
                 fs.writeFileSync(`${path}src/core/managers/sdkManager.js`, getDataForSdkManager(actions[index]));
             } else {
                 let contents = fs.readFileSync(`${path}src/core/managers/sdkManager.js`, 'utf8');
-                contents = contents.replace('//.import', `import ${upperCaseFisrt(actions[index])}SDK from './../api-sdk/${lowerCaseFirst(actions[index])}SDK';\n//.import`);
-                contents = contents.replace('//.construct', `const ${lowerCaseFirst(actions[index])}SDK = new ${upperCaseFisrt(actions[index])}SDK(ServiceManager.networkService);\n//.construct`);
+                contents = contents.replace('//.import', `import ${upperCaseFirst(actions[index])}SDK from './../api-sdk/${lowerCaseFirst(actions[index])}SDK';\n//.import`);
+                contents = contents.replace('//.construct', `const ${lowerCaseFirst(actions[index])}SDK = new ${upperCaseFirst(actions[index])}SDK(ServiceManager.networkService);\n//.construct`);
                 contents = contents.replace('//.export', `${lowerCaseFirst(actions[index])}SDK,\n//.export`);
                 fs.writeFileSync(`${path}src/core/managers/sdkManager.js`, contents);
             }

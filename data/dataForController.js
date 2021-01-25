@@ -1,7 +1,7 @@
-const { lowerCaseFirst, upperCaseFisrt } = require('./../helper');
+const { lowerCaseFirst, upperCaseFirst } = require('./../helper');
 
 function getDataForController(type) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
     const typeFirstLowerCase = lowerCaseFirst(type);
 
     return `import {

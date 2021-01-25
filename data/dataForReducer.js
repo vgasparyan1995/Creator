@@ -1,7 +1,7 @@
-const {lowerCaseFirst, upperCaseFisrt} = require('./../helper');
+const {lowerCaseFirst, upperCaseFirst} = require('./../helper');
 
 function getDataForReducer(type) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
     const typeFirstLowerCase = lowerCaseFirst(type);
 
     return `import ${typeFirstUpperCase}ActionType from "../actions/${typeFirstLowerCase}/${typeFirstLowerCase}ActionType";
@@ -53,7 +53,7 @@ export default ${typeFirstLowerCase}Reducer;
 }
 
 function getDataForReducerDefault(type, property, action_type, loading) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
     const typeFirstLowerCase = lowerCaseFirst(type);
 
     return `import ${typeFirstUpperCase}ActionType from "../actions/${typeFirstLowerCase}/${typeFirstLowerCase}ActionType";
@@ -88,7 +88,7 @@ export default ${typeFirstLowerCase}Reducer;
 }
 
 function getCustomCase(type, property, action_type, loading) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
 
     return `case ${typeFirstUpperCase}ActionType.${action_type}:
 return {
@@ -107,16 +107,14 @@ return {
 }  `
 }
 
-function getDataForCombineReducer(type) {
-    const typeFirstLowerCase = lowerCaseFirst(type);
+
+function getDataForCombineReducer() {
 
     return `import {combineReducers} from 'redux';
 
-import ${typeFirstLowerCase}Reducer from './${typeFirstLowerCase}Reducer';
 //.import
     
 const AppReducer = combineReducers({
-    ${typeFirstLowerCase}Reducer,
     //.construct
 });
     

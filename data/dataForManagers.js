@@ -1,7 +1,7 @@
-const { lowerCaseFirst, upperCaseFisrt } = require('./../helper');
+const { lowerCaseFirst, upperCaseFirst } = require('./../helper');
 
 function getDataForControllerManager(type) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
     const typeFirstLowerCase = lowerCaseFirst(type);
 
     return `import SelectorManager from './selectorManager.js';
@@ -21,7 +21,7 @@ export {
 }
 
 function getDataForSdkManager(type) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
     const typeFirstLowerCase = lowerCaseFirst(type);
 
     return `import ServiceManager from './serviceManager';

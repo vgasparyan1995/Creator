@@ -1,7 +1,7 @@
-const { upperCaseFisrt } = require('./../helper');
+const { upperCaseFirst } = require('./../helper');
 
 function getDataForSDK(type) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
 
     return `class ${typeFirstUpperCase}SDK {
     constructor(network_service) {

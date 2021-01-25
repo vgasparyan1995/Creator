@@ -21,7 +21,7 @@ function getDataForScss() {
     return `@import "assets/sass/settings";`
 }
 
-function getDateForSassSettings() {
+function getDataForSassSettings() {
     return `$version-control: '?v=#{random(777)}';
 $transition-duration: 0.24s;
 
@@ -49,10 +49,10 @@ $info-color: #1473e6;
 `
 }
 
-function getDataForPackage(appliactionName) {
-    appliactionName = appliactionName || '';
+function getDataForPackage(app_name) {
+    app_name = app_name || '';
     return `{
-    "name": "${appliactionName.toLowerCase()}",
+    "name": "${app_name.toLowerCase()}",
     "version": "0.1.1",
     "private": true,
     "scripts": {
@@ -152,6 +152,6 @@ function getDataForPackage(appliactionName) {
 module.exports = {
     getDataForIndex,
     getDataForScss,
-    getDateForSassSettings,
+    getDataForSassSettings,
     getDataForPackage
 }

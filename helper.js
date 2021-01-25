@@ -1,4 +1,6 @@
-function upperCaseFisrt(s) {
+const fs = require('fs');
+
+function upperCaseFirst(s) {
     if (typeof s !== 'string') return '';
     return s.charAt(0).toUpperCase() + s.slice(1);
 }
@@ -13,8 +15,32 @@ function convertCamelCase(s)  {
     return result.toUpperCase();
 }
 
+function createFolder(path) {
+    if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
+    }
+}
+
+function createFile(path, data) {
+    if (!fs.existsSync(path)) {
+        fs.writeFileSync(path, data);
+    }
+}
+
+function readFile(path) {
+    return fs.readFileSync(path, 'utf8');
+}
+
+function writeFile(path, contents) {
+    fs.writeFileSync(path, contents)
+}
+
 module.exports = {
-    upperCaseFisrt,
+    readFile,
+    writeFile,
+    createFile,
+    createFolder,
+    upperCaseFirst,
     lowerCaseFirst,
     convertCamelCase,
 }

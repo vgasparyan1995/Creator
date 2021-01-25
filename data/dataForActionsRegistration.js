@@ -1,7 +1,7 @@
-const { lowerCaseFirst, upperCaseFisrt } = require('./../helper');
+const { lowerCaseFirst, upperCaseFirst } = require('./../helper');
 
 function getDataForActionsRegistration(type) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
     const typeFirstLowerCase = lowerCaseFirst(type);
 
     return `import ${typeFirstUpperCase}ActionTypes from "./../actions/${typeFirstLowerCase}/${typeFirstLowerCase}ActionType";
@@ -18,7 +18,7 @@ export default function ${typeFirstLowerCase}Registration(configs) {
 }
 
 function getDataForActionsRegistrationDefault(type, functionName, actionType) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
     const typeFirstLowerCase = lowerCaseFirst(type);
 
     return `import ${typeFirstUpperCase}ActionTypes from "./../actions/${typeFirstLowerCase}/${typeFirstLowerCase}ActionType";
@@ -32,15 +32,12 @@ export default function ${typeFirstLowerCase}Registration(configs) {
 }
 
 
-function getIndexActionsRegistration(type) {
-    const typeFirstLowerCase = lowerCaseFirst(type);
-
-    return `import ${typeFirstLowerCase}Registration from "./${typeFirstLowerCase}Registration";
+function getIndexActionsRegistration() {
+    return `
 //.import
 
 const configs = new Map();
 
-${typeFirstLowerCase}Registration(configs);
 //.construct
 
 export default configs;

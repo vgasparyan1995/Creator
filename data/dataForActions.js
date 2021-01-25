@@ -1,87 +1,67 @@
-const { lowerCaseFirst, upperCaseFisrt } = require('./../helper');
+const { lowerCaseFirst, upperCaseFirst } = require('./../helper');
 
 function getDataForActionCreator(type) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
     const typeFirstLowerCase = lowerCaseFirst(type);
 
     return `import ${typeFirstUpperCase}ActionType from "./${typeFirstLowerCase}ActionType";
 
-export function get${typeFirstUpperCase}s(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.GET_${type.toUpperCase()}S,
-        payload
-    }
-}
+export const get${typeFirstUpperCase}s = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.GET_${type.toUpperCase()}S,
+    payload
+});
 
-export function get${typeFirstUpperCase}sLoading(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.GET_${type.toUpperCase()}S_LOADING,
-        payload
-    } 
-}
+export const get${typeFirstUpperCase}sLoading = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.GET_${type.toUpperCase()}S_LOADING,
+    payload
+});
 
-export function add${typeFirstUpperCase}(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.ADD_${type.toUpperCase()},
-        payload
-    }
-}
+export const add${typeFirstUpperCase} = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.ADD_${type.toUpperCase()},
+    payload
+});
 
-export function add${typeFirstUpperCase}Loading(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.ADD_${type.toUpperCase()}_LOADING,
-        payload
-    }
-}
+export const add${typeFirstUpperCase}Loading = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.ADD_${type.toUpperCase()}_LOADING,
+    payload
+});
 
-export function edit${typeFirstUpperCase}(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.EDIT_${type.toUpperCase()},
-        payload
-    }
-}
+export const edit${typeFirstUpperCase} = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.EDIT_${type.toUpperCase()},
+    payload
+});
 
-export function edit${typeFirstUpperCase}Loading(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.EDIT_${type.toUpperCase()}_LOADING,
-        payload
-    }
-}
+export const edit${typeFirstUpperCase}Loading = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.EDIT_${type.toUpperCase()}_LOADING,
+    payload
+});
 
-export function delete${typeFirstUpperCase}(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.DELETE_${type.toUpperCase()},
-        payload
-    }
-}
+export const delete${typeFirstUpperCase} = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.DELETE_${type.toUpperCase()},
+    payload
+});
 
-export function delete${typeFirstUpperCase}Loading(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.DELETE_${type.toUpperCase()}_LOADING,
-        payload
-    }
-}
+export const delete${typeFirstUpperCase}Loading = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.DELETE_${type.toUpperCase()}_LOADING,
+    payload
+});
 
-export function save${typeFirstUpperCase}s(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.SAVE_${type.toUpperCase()}S,
-        payload
-    }
-}
+export const save${typeFirstUpperCase}s = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.SAVE_${type.toUpperCase()}S,
+    payload
+});
 
-export function reset${typeFirstUpperCase}s(payload) {
-    return {
-        type: ${typeFirstUpperCase}ActionType.RESET_${type.toUpperCase()}S,
-        payload
-    }
-}
+export const reset${typeFirstUpperCase}s = (payload) => ({
+    type: ${typeFirstUpperCase}ActionType.RESET_${type.toUpperCase()}S,
+    payload
+});
 
 //.function
 `;
 }
 
 function getDataForActionType(type) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
 
     return `const ${typeFirstUpperCase}ActionType = {
     GET_${type.toUpperCase()}S: "get_${type.toLowerCase()}s",
@@ -106,7 +86,7 @@ export default ${typeFirstUpperCase}ActionType;
 }
 
 function getCustomActionCreator(action, functionName, actionType, loading) {
-    const typeFirstUpperCase = upperCaseFisrt(action);
+    const typeFirstUpperCase = upperCaseFirst(action);
     return `export function ${functionName}(payload) {
     return {
         type: ${typeFirstUpperCase}ActionType.${actionType},
@@ -135,7 +115,7 @@ ${loading ? `${actionType}_LOADING: "${actionType.toLowerCase()}_loading",` : ''
 
 function getDefaultActionCreator(type) {
 
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
     const typeFirstLowerCase = lowerCaseFirst(type);
 
     return `import ${typeFirstUpperCase}ActionType from "./${typeFirstLowerCase}ActionType";
@@ -146,7 +126,7 @@ function getDefaultActionCreator(type) {
 }
 
 function getDefaultActionType(type) {
-    const typeFirstUpperCase = upperCaseFisrt(type);
+    const typeFirstUpperCase = upperCaseFirst(type);
 
     return `const ${typeFirstUpperCase}ActionType = {
     //.type

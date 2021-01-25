@@ -5,25 +5,35 @@ const {
     createWebpack,
     createApplication,
 } = require('./creator');
+const Initializing = require('./src/services/initializing');
+const Webpack = require('./src/services/webpack');
+const Redux =require('./src/services/redux');
 
 
-let path = process.argv[3] || './';
+let pathname = process.argv[3] || './';
 let options = JSON.parse(process.argv[2]);
 
-let actions = options.actions || [];
-let webpack = options.webpack || false;
-let application = options.application || false;
+const app_name = options.app_name;
+const redux = options.redux;
 
-if (application) {
-    const app_name = application.name || '';
-    createApplication(path, app_name);
-}
+// let actions = options.actions || [];
+// let webpack = options.webpack || false;
+// let application = options.application || false;
 
-if (webpack) {
-    const app_name = webpack.app_name || '';
-    createWebpack(path, app_name);
-}
-
-if (actions) {
-    createActions(path, actions);
-}
+Initializing.create(app_name, pathname);
+Webpack.create(app_name, pathname);
+Redux.create(redux, pathname);
+//
+// if (application) {
+//     const app_name = application.name || '';
+//     createApplication(path, app_name);
+// }
+//
+// if (webpack) {
+//     const app_name = webpack.app_name || '';
+//     createWebpack(path, app_name);
+// }
+//
+// if (actions) {
+//     createActions(path, actions);
+// }
