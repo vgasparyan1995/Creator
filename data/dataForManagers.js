@@ -1,51 +1,35 @@
 const { lowerCaseFirst, upperCaseFirst } = require('./../helper');
 
-function getDataForControllerManager(type) {
-    const typeFirstUpperCase = upperCaseFirst(type);
-    const typeFirstLowerCase = lowerCaseFirst(type);
-
+function getDataForControllerManager() {
     return `import SelectorManager from './selectorManager.js';
 import SdkManager from './sdkManager.js';
-import ${typeFirstUpperCase}Controller from './../controllers/${typeFirstLowerCase}Controller';
 //.import
 
-const ${typeFirstLowerCase} = new ${typeFirstUpperCase}Controller(SelectorManager.${typeFirstLowerCase}Selector, SdkManager.${typeFirstLowerCase}SDK);
 //.construct
 
 export {
-    ${typeFirstLowerCase},
     //.export
 };
 
 `
 }
 
-function getDataForSdkManager(type) {
-    const typeFirstUpperCase = upperCaseFirst(type);
-    const typeFirstLowerCase = lowerCaseFirst(type);
-
+function getDataForSdkManager() {
     return `import ServiceManager from './serviceManager';
-import ${typeFirstUpperCase}SDK from './../api-sdk/${typeFirstLowerCase}SDK';
 //.import
 
-const ${typeFirstLowerCase}SDK = new ${typeFirstUpperCase}SDK(ServiceManager.networkService);
 //.construct
 
 export default {
-    ${typeFirstLowerCase}SDK,
     //.export
 }
 `
 }
 
-function getDataForSelectorManager(type) {
-    const typeFirstLowerCase = lowerCaseFirst(type);
-
-    return `import ${typeFirstLowerCase}Selector from './../store/selectors/${typeFirstLowerCase}Selector';
-//.import
+function getDataForSelectorManager() {
+    return `//.import
 
 export default {
-    ${typeFirstLowerCase}Selector,
     //.export
 }
 `

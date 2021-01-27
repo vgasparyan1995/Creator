@@ -6,9 +6,9 @@ const {getDataForReducer, getDataForCombineReducer} = require('./../../data/data
 const {getDataForActionCreator, getDataForActionType} = require('./../../data/dataForActions');
 const {getIndexActionsRegistration, getDataForActionsRegistration} = require('./../../data/dataForActionsRegistration');
 
-class Redux {
+class AppServices {
 
-    static create(redux_items, path) {
+    static create(path, redux_items) {
         this._initial(path);
         this._createStore(path);
         this._createActionInvokingMiddleware(path);
@@ -123,6 +123,7 @@ class Redux {
             writeFile(action_path, getDataForActionsRegistration(name));
 
             let contents = readFile(action_reg_index);
+            if (contents.includes(`${lowerCaseFirst(name)}Registration`)) return;
             contents = contents.replace('//.import', `import ${lowerCaseFirst(name)}Registration from './${lowerCaseFirst(name)}Registration';\n//.import`);
             contents = contents.replace('//.construct', `${lowerCaseFirst(name)}Registration(configs);\n//.construct`);
             writeFile(action_reg_index, contents);
@@ -130,4 +131,4 @@ class Redux {
     }
 }
 
-module.exports = Redux;
+module.exports = AppServices;
